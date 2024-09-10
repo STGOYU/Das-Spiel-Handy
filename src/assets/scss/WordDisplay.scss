@@ -1,0 +1,63 @@
+#word {
+  grid-column: 1 / span 5; /* Tüm kolonlara yayıl */
+  grid-row: 2; /* 2. satıra yerleştir */
+  font-size: 28px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* Satırlara yayılmasını engellemek için nowrap ekliyoruz */
+  gap: 5px; /* Butonlar arasında boşluk bırakmak için */
+
+  .letter-button {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    margin: 0; /* Butonlar arasında boşluk için gap kullanacağımızdan margin sıfırlıyoruz */
+    display: inline-block;
+    border: 2px solid #000;
+    background-color: #fff;
+    text-transform: uppercase;
+    transition: background-color 0.5s, transform 0.5s;
+    cursor: pointer;
+    text-align: center;
+    line-height: 45px;
+    border-radius: 5px;
+  }
+
+  .letter-button.correct {
+    background-color: #0f0;
+    transform: rotateY(360deg);
+  }
+
+  .letter-button.wrong {
+    background-color: #f00;
+    color: #fff;
+  }
+
+  .letter-button.space {
+    background-color: hsl(170, 20%, 70%);
+    border: none;
+    cursor: default;
+  }
+
+  @media (max-width: 803px) {
+    grid-column: 1 / span 5; /* Tüm kolonlara yayıl */
+    justify-content: center; /* İçeriği ortala */
+    font-size: 24px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+    
+    .letter-button {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      line-height: 38px;
+    }
+  }
+}

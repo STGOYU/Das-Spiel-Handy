@@ -1,0 +1,25 @@
+.bonus-container {
+  position: relative;
+  height: 50px; /* Yüksekliği, bonus metninin görünürlüğüne göre ayarlayın */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bonus {
+  font-size: 100px;
+  color: blue;
+  position: absolute;
+  animation: moveUp 2s ease-out forwards;
+}
+
+@keyframes moveUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
