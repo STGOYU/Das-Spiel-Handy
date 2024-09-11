@@ -2,7 +2,7 @@ import React from 'react';
 import '../assets/scss/Alphabet.scss';
 
 const Alphabet = ({ handleGuess, guessedLetters, correctLetters }) => {
-  const keyboardLayout = ['qwertzuiop', 'asdfghjklä', 'yxcvbnmöü'];
+  const keyboardLayout = ['qwertzuiop', 'asdfghjklä', 'yxcvbnmöüß'];
 
   return (
     <div id="alphabet">
