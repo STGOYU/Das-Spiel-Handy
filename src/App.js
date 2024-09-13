@@ -21,8 +21,8 @@ const TOTAL_QUESTIONS = 10; // Total number of questions
 const App = () => {
   const [selectedWord, setSelectedWord] = useState("");
   const [selectedTipp, setSelectedTipp] = useState("");
-  const [guessedLetters, setGuessedLetters] = useState([]);
-  const [correctLetters, setCorrectLetters] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [correctAnswer, setCorrectAnswer] = useState("");
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState("");
   const [bonusText, setBonusText] = useState("");
@@ -32,9 +32,7 @@ const App = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0); // Number of answered questions
   const [isMuted, setIsMuted] = useState(false); // State to track if sound is muted
-  const [inputValue, setInputValue] = useState(""); 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); 
-  const [isInputFocused, setIsInputFocused] = useState(true); 
+  
 
   // Play sound function
   const playSound = (sound) => {
@@ -51,12 +49,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isMobileDevice = /android|iphone|ipad|ipod|windows phone/i.test(userAgent);
-    setIsMobile(isMobileDevice); 
-  }, []);
-
-  useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
@@ -68,7 +60,7 @@ const App = () => {
         if (timeLeft > 0) {
           setTimeLeft(timeLeft - 1);
         } else {
-          handleTimeOut();
+          handleGameOver();
         }
       }, 1000);
     }
@@ -76,23 +68,70 @@ const App = () => {
   }, [timeLeft, isTimerRunning]);
 
   const startGame = () => {
-    setGuessedLetters([]);
-    setCorrectLetters([]);
     setScore(0);
     setAnsweredQuestionsCount(0);
     setMessage("");
     setTriggerConfetti(false);
     setTimeLeft(60);
     setIsTimerRunning(false);
-    loadNewWord(); // Load a new word and tip when the game starts
-    setIsInputFocused(true);
+    loadNewQuestion(); // Load a new word and tip when the game starts
   };
 
-  const loadNewWord = () => {
+  const loadNewQuestion = () => {
     const randomIndex = Math.floor(Math.random() * words.length);
     const selectedWordObj = words[randomIndex];
     setSelectedWord(selectedWordObj.word);
     setSelectedTipp(selectedWordObj.tipp);
+
+    const correct = selectedWordObj.word;
+    const allOptions = generateRandomOptions(correct);
+    setOptions(allOptions);
+    setCorrectAnswer(correct);
+  };
+
+  const generateRandomOptions = (correct) => {
+    const options = [correct];
+    while (options.length < 4) {
+      const randomWord = words[Math.floor(Math.random() * words.length)].word;
+      if (!options.includes(randomWord)) {
+        options.push(randomWord);
+      }
+    }
+    return options.sort(() => Math.random() - 0.5);
+  };
+
+  const handleOptionClick = (option) => {
+    if (option === correctAnswer) {
+      setScore(score + 10);
+      setBonusText("+10");
+      setTimeLeft(timeLeft + 5);
+      playSound(gitar);
+      setTriggerConfetti(true);
+    } else {
+      setScore(score - 5);
+      setBonusText("-5");
+      setTimeLeft(timeLeft - 5);
+      playSound(horn);
+    }
+
+    setTimeout(() => {
+      setBonusText("");
+      setTriggerConfetti(false);
+    }, 2000);
+
+    setAnsweredQuestionsCount(answeredQuestionsCount + 1);
+
+    if (answeredQuestionsCount + 1 < TOTAL_QUESTIONS) {
+      loadNewQuestion();
+    } else {
+      handleGameOver();
+    }
+  };
+
+  const handleGameOver = () => {
+    setIsTimerRunning(false);
+    setMessage("Game Over!");
+    playSound(horn);
   };
 
   const resumeTimer = () => {
@@ -101,102 +140,6 @@ const App = () => {
 
   const stopTimer = () => {
     setIsTimerRunning(false);
-  };
-
-  const handleTimeOut = () => {
-    setMessage(
-      `Game Over! Das richtige Wort war: ${selectedWord.toUpperCase()}`
-    );
-    playSound(horn);
-    setIsTimerRunning(false);
-  };
-
-  // Klavye girdisini yönetme fonksiyonu
-  const handleKeyPress = (event) => {
-    const pressedKey = event.key.toLowerCase(); // Basılan tuşu küçük harfe çevirir
-    if (/^[a-zäöü]$/.test(pressedKey) && !guessedLetters.includes(pressedKey)) {
-      handleGuess(pressedKey);
-    }
-  };
-
-  const handleInputChange = (event) => {
-    const letter = event.target.value.toLowerCase(); // Girilen harfi al ve küçük harfe çevir
-    if (/^[a-zäöü]$/.test(letter)) { // Sadece geçerli bir harf girilmişse işleme devam et
-      handleGuess(letter);
-    }
-  };
-
-  const handleNewWord = () => {
-    setInputValue(''); // Yeni kelimeye geçince input'u temizle
-  };
-
-  // Ekran boyutuna göre input görünürlüğünü belirlemek için bir event listener ekle
-  window.addEventListener('resize', () => {
-    setIsMobile(window.innerWidth <= 768);
-  });
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [guessedLetters, isTimerRunning]);
-
-  const handleGuess = (letter) => {
-    if (!isTimerRunning) return; // Zamanlayıcı çalışmıyorsa tahmin yapmayı engelle
-
-    if (guessedLetters.includes(letter)) return; // Zaten tahmin edilen harfse tekrar tahmin edilmez
-    setGuessedLetters([...guessedLetters, letter]);
-
-    if (selectedWord.includes(letter)) {
-      playSound(dark);
-      const occurrences = selectedWord.split("").filter((l) => l === letter).length;
-      setCorrectLetters([...correctLetters, letter]);
-      const pointsEarned = occurrences * 10;
-      setScore(score + pointsEarned);
-      setBonusText(`+${pointsEarned}`);
-
-      const updatedGuessedLetters = [...guessedLetters, letter];
-      const wordDisplay = selectedWord
-        .split("")
-        .map((l) => (updatedGuessedLetters.includes(l) ? l : "_"))
-        .join("");
-
-      if (wordDisplay === selectedWord) {
-        setTriggerConfetti(true);
-        playSound(gitar);
-        setScore(score + 20);
-        setBonusText(`+20`);
-        setAnsweredQuestionsCount(answeredQuestionsCount + 1);
-
-        setTimeout(() => {
-          if (answeredQuestionsCount + 1 === TOTAL_QUESTIONS) {
-            playSound(tada);
-            setMessage("Herzlichen Glückwunsch!");
-            setTriggerConfetti(true);
-            setIsTimerRunning(false);
-          } else {
-            loadNewWord();
-            setTimeLeft(timeLeft + 5 * occurrences);
-            setGuessedLetters([]);
-            setCorrectLetters([]);
-          }
-        }, 2000);
-      } else {
-        setTimeLeft(timeLeft + 5 * occurrences);
-      }
-
-      setTimeout(() => {
-        setBonusText("");
-      }, 2000);
-    } else {
-      setTimeLeft(timeLeft - 3);
-
-      if (timeLeft < 1) {
-        handleTimeOut();
-      }
-    }
   };
 
   const getMessageStyle = () => {
@@ -242,19 +185,18 @@ const App = () => {
           {timeLeft}
         </div>
         </div>
-        <WordDisplay word={selectedWord} guessedLetters={guessedLetters} />
-        <div className="input-container">
-          {isMobile && (
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              maxLength={1}
-              autoFocus={isInputFocused}
-              className="input" 
-            />
-          )}
-        </div>
+       
+      </div>
+      <div className="options-container">
+        {options.map((option, index) => (
+          <button
+            key={index}
+            className="option-button"
+            onClick={() => handleOptionClick(option)}
+          >
+            {option}
+          </button>
+        ))}
       </div>
       <div id="message" className="message" style={getMessageStyle()}>
         {message}
