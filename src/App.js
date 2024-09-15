@@ -102,9 +102,9 @@ const App = () => {
 
   const handleOptionClick = (option) => {
     if (option === correctAnswer) {
-      setScore(score + 10);
-      setBonusText("+10");
-      setTimeLeft(timeLeft + 5);
+      setScore(score + 30);
+      setBonusText("+30");
+      setTimeLeft(timeLeft + 20);
       playSound(gitar);
       setTriggerConfetti(true);
     } else {
@@ -130,7 +130,8 @@ const App = () => {
 
   const handleGameOver = () => {
     setIsTimerRunning(false);
-    setMessage("Game Over!");
+    setMessage("Der Abschnitt erfolgreich beendet!");
+    getMessageStyle();
     playSound(horn);
   };
 
@@ -145,10 +146,10 @@ const App = () => {
   const getMessageStyle = () => {
     if (message.includes("Herzlichen Glückwunsch!")) {
       return { color: "#007bff" };
-    } else if (message.includes("Game Over!")) {
-      return { color: "#ff0000" };
+    } else if (message.includes("Der Abschnitt erfolgreich beendet!")) {
+      return { color: "#28a745; " };
     } else {
-      return { color: "#ff5733" };
+      return { color: "#28a745; " };
     }
   };
 
@@ -185,9 +186,7 @@ const App = () => {
           {timeLeft}
         </div>
         </div>
-       
-      </div>
-      <div className="options-container">
+        <div className="options-container">
         {options.map((option, index) => (
           <button
             key={index}
@@ -197,7 +196,9 @@ const App = () => {
             {option}
           </button>
         ))}
+      </div>   
       </div>
+      
       <div id="message" className="message" style={getMessageStyle()}>
         {message}
       </div>

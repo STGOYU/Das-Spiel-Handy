@@ -109,6 +109,53 @@ body {
       word-break: break-word;
     }
 
+    .options-container {
+      grid-column: 2 / 5; // 2'den 5'e kadar sütunları kapsa
+      grid-row: 2; // İkinci satıra yerleştir
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  
+    .option-button {
+      padding: 15px 20px;
+      font-size: 18px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+      &:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+  
+      &:active {
+        background-color: #00408a;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1330px) {
+
+      .options-container {
+        flex-direction: column; // Mobilde seçenekleri dikey hizala
+        gap: 10px;
+      }
+
+      .option-button {
+        width: 100%;
+        margin: 5px 0; // Düğmelerin arası biraz boşluk bırak
+        font-size: 16px;
+      }
+    }
+
     @media (max-width: 768px) {
 
       .timer {
@@ -120,6 +167,17 @@ body {
       .tipp-display {
         margin-left: 0;
         max-width: 90%;
+      }
+
+      .options-container {
+        flex-direction: column; // Mobilde seçenekleri dikey hizala
+        gap: 10px;
+      }
+
+      .option-button {
+        width: 100%;
+        margin: 5px 0; // Düğmelerin arası biraz boşluk bırak
+        font-size: 16px;
       }
     }
     
