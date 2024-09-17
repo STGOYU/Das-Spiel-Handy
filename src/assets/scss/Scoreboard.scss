@@ -1,25 +1,26 @@
 #scoreboard {
-  margin-top: 50px;
-  font-size: 24px;
-  color: #333;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+  // margin-top: 50px;
+  // font-size: 24px;
+  // color: #333;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
+  // width: 300px;
+  // margin-left: auto;
+  // margin-right: auto;
+  // padding: 10px;
+  // border-radius: 10px;
+  // background-color: #f7f7f7;
+  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  margin: 20px;
   padding: 10px;
-  border-radius: 10px;
-  background-color: #f7f7f7;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: hsl(170, 20%, 70%);
+  text-align: center;
+  font-size: 20px;
 
-  .score-player {
-    font-weight: bold;
-    color: #007bff;
+  h3, h4 {
+    margin: 5px 0;
   }
 
-  .remaining-questions {
-    font-weight: bold;
-    color: #ff5733;
-  }
 }

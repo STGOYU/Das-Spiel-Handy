@@ -60,8 +60,8 @@ body {
       overflow: hidden;
 
       .timer {
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         background-color: #007bff;
         color: #fff;
@@ -154,15 +154,11 @@ body {
         margin: 5px 0; // Düğmelerin arası biraz boşluk bırak
         font-size: 16px;
       }
+
     }
 
     @media (max-width: 768px) {
 
-      .timer {
-        width: 60px;
-        height: 60px;
-        font-size: 25px;
-      }
     
       .tipp-display {
         margin-left: 0;
@@ -209,6 +205,57 @@ body {
   object-fit: cover;
   opacity: 0.7;
   filter: brightness(80%);
+}
+
+.game-over-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .next-button, .restart-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+
+    &:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      background-color: #00408a;
+      transform: translateY(0);
+    }
+  }
+
+  .restart-button {
+    background-color: #dc3545;
+
+    &:hover {
+      background-color: #c82333;
+    }
+
+    &:active {
+      background-color: #bd2130;
+    }
+  }
 }
 
 @media (max-width: 768px) {

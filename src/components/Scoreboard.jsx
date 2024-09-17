@@ -1,15 +1,13 @@
 import React from 'react';
 import '../assets/scss/Scoreboard.scss';
 
-const Scoreboard = ({ score, remainingQuestions }) => {
+const Scoreboard = ({ score, totalScore, level, remainingQuestions }) => {
   return (
     <div id="scoreboard">
-      <span className="score-player">
-        Ergebnis: {score}
-      </span>
-      <span className="remaining-questions">
-        Frage Nr: {remainingQuestions}
-      </span>
+      <h3>Aktuelle Punkte: {score}</h3>
+      <h3>Gesamtpunkte: {totalScore}</h3>
+      <h3>Abschnitt: {level}</h3>
+      <h4>Frage Nr: {remainingQuestions}</h4>
     </div>
   );
 };
