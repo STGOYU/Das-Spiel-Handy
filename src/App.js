@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Scoreboard from "./components/Scoreboard";
-import WordDisplay from "./components/WordDisplay";
 import BonusDisplay from "./components/BonusDisplay";
 import ConfettiCanvas from "./components/ConfettiCanvas";
 import RestartButton from "./components/RestartButton";
@@ -8,11 +7,9 @@ import TippDisplay from "./components/TippDisplay";
 import words from "./words";
 import "./assets/scss/_global.scss";
 import logo from "./assets/img/logo.webp";
-import dark from "./assets/sounds/dark.mp3";
 import tada from "./assets/sounds/tada.mp3";
 import gitar from "./assets/sounds/gitar.mp3";
 import horn from "./assets/sounds/horn.mp3";
-import music from "./assets/sounds/music.mp3"
 import { SlVolume2 } from "react-icons/sl";
 import { SlVolumeOff } from "react-icons/sl";
 
