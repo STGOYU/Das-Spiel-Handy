@@ -33,8 +33,11 @@ const App = () => {
   const [isMuted, setIsMuted] = useState(false); // Sesi kapatma durumu
   const [gameOver, setGameOver] = useState(false); // Oyun bitiş durumu
   const [gameResult, setGameResult] = useState(""); // Oyun sonucu: "success" veya "fail"
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null); // Hangi butonun seçildiğini takip eder
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState(null); // Cevabın doğru olup olmadığını takip eder
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [areOptionsDisabled, setAreOptionsDisabled] = useState(false); // Seçeneklerin aktif olup olmadığını kontrol eder
 
-  
 
   // Play sound function
   const playSound = (sound) => {
@@ -75,7 +78,8 @@ const App = () => {
     setMessage("");
     setTriggerConfetti(false);
     setTimeLeft(60);
-    setIsTimerRunning(false);
+    setIsGameStarted(true);
+    setIsTimerRunning(true);
     setGameOver(false);
     setGameResult("");
     loadNewQuestion(); // Load a new word and tip when the game starts
@@ -115,31 +119,37 @@ const App = () => {
     return options.sort(() => Math.random() - 0.5);
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option, index) => {
+    setSelectedOptionIndex(index);
+
     if (option === correctAnswer) {
+      setIsCorrectAnswer(true);
       setScore(score + 30);
       setBonusText("+30");
       setTimeLeft(timeLeft + 30);
       playSound(gitar);
       setTriggerConfetti(true);
     } else {
+      setIsCorrectAnswer(false);
       setScore(score - 10);
       setBonusText("-10");
       setTimeLeft(timeLeft - 10);
     }
 
     setTimeout(() => {
+      setSelectedOptionIndex(null); // Renklenmeyi sıfırlayın
+      setIsCorrectAnswer(null); // Doğru/yanlış durumunu sıfırlayın
       setBonusText("");
       setTriggerConfetti(false);
-    }, 2000);
 
-    setAnsweredQuestionsCount(answeredQuestionsCount + 1);
+      setAnsweredQuestionsCount(answeredQuestionsCount + 1);
 
-    if (answeredQuestionsCount + 1 < TOTAL_QUESTIONS) {
-      loadNewQuestion();
-    } else {
-      handleGameOver();
-    }
+      if (answeredQuestionsCount + 1 < TOTAL_QUESTIONS) {
+        loadNewQuestion();
+      } else {
+        handleGameOver();
+      }
+    }, 1500);
   };
 
   const handleGameOver = () => {
@@ -149,7 +159,9 @@ const App = () => {
       setTotalScore(totalScore + score); // Toplam skora mevcut skoru ekle
       setLevel(level + 1); // Sonraki bölüme geç
       setGameResult("success");
-      setMessage("Herzlichen Glückwunsch, Sie haben den Abschnitt erfolgreich abgeschlossen.!");
+      setMessage(
+        "Herzlichen Glückwunsch, Sie haben den Abschnitt erfolgreich abgeschlossen.!"
+      );
       playSound(tada);
     } else {
       setGameResult("fail");
@@ -182,8 +194,10 @@ const App = () => {
 
   const handleRestartGame = () => {
     setTotalScore(0); // Toplam skoru sıfırla
+    setIsGameStarted(true);
     setLevel(1); // Bölümü sıfırla
     startGame(); // Oyunu yeniden başlat
+    setIsTimerRunning(true);
   };
 
   if (loading) {
@@ -225,6 +239,9 @@ const App = () => {
         resumeTimer={resumeTimer}
         stopTimer={stopTimer}
         playSound={playSound}
+        isGameStarted={isGameStarted}
+        setAreOptionsDisabled={setAreOptionsDisabled}
+        handleGameOver={handleGameOver}
       />
       <div className="grid-container">
         <div className="voice-container">
@@ -234,35 +251,42 @@ const App = () => {
             <SlVolume2 onClick={toggleSound} className="voice" size={10} />
           )}
         </div>
-        <TippDisplay
-          tipp={selectedTipp}
-        />
+        <TippDisplay tipp={selectedTipp} />
         <div className="timer-container">
-        <div id="timer" className="timer">
-          {timeLeft}
-        </div>
+          <div id="timer" className="timer">
+            {timeLeft}
+          </div>
         </div>
         <div className="options-container">
-        {options.map((option, index) => (
-          <button
-            key={index}
-            className="option-button"
-            onClick={() => handleOptionClick(option)}
-          >
-            {option}
-          </button>
-        ))}
-      </div>   
+          {options.map((option, index) => (
+            <button
+              key={index}
+              className={`option-button ${
+                selectedOptionIndex === index
+                  ? isCorrectAnswer
+                    ? "correct"
+                    : "incorrect"
+                    : option === correctAnswer && selectedOptionIndex !== null // Yanlış cevap tıklandıysa doğru cevabı yeşil yap
+                    ? "correct"
+                    : ""
+              }`}
+              onClick={() => handleOptionClick(option, index)}
+              disabled={areOptionsDisabled || selectedOptionIndex !== null}  // Cevaplandıktan sonra butonları devre dışı bırak
+            >
+              {option}
+            </button>
+          ))}
+        </div>
       </div>
-      
+
       <div id="message" className="message" style={getMessageStyle()}>
         {message}
       </div>
       <Scoreboard
-          score={score}
-          totalScore={totalScore}
-          level={level}
-          remainingQuestions={TOTAL_QUESTIONS - answeredQuestionsCount}
+        score={score}
+        totalScore={totalScore}
+        level={level}
+        remainingQuestions={TOTAL_QUESTIONS - answeredQuestionsCount}
       />
       <BonusDisplay bonusText={bonusText} />
       <ConfettiCanvas triggerConfetti={triggerConfetti} />

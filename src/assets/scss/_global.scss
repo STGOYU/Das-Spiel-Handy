@@ -142,6 +142,22 @@ body {
       }
     }
 
+    .option-button.correct {
+      background-color: #28a745; /* Yeşil renk (doğru) */
+      color: white;
+    }
+    
+    .option-button.incorrect {
+      background-color: #dc3545; /* Kırmızı renk (yanlış) */
+      color: white;
+    }
+    
+    .option-button:disabled {
+      opacity: 0.6; /* Cevaplandıktan sonra butonlar yarı saydam olsun */
+      cursor: not-allowed; /* Kullanılamaz imleç */
+    }
+    
+
     @media (max-width: 1330px) {
 
       .options-container {

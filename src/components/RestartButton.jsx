@@ -2,19 +2,18 @@ import React, { useState } from "react";
 import "../assets/scss/RestartButton.scss";
 import stopSound from "../assets/sounds/dark.mp3";
 
-const RestartButton = ({ startGame, resumeTimer, stopTimer, playSound }) => {
+const RestartButton = ({ startGame, resumeTimer, stopTimer, playSound, isGameStarted, setAreOptionsDisabled, handleGameOver  }) => {
   const [isStartDisabled, setIsStartDisabled] = useState(false);
-  const [isGameStarted, setIsGameStarted] = useState(false);
 
   const handleStartClick = () => {
     if (!isStartDisabled) {
       if (!isGameStarted) {
         startGame(); // Call startGame only if the game hasn't started before
-        setIsGameStarted(true); // Set the game as started
       }
      // playSound(startSound); // Play the start sound
       resumeTimer();
       setIsStartDisabled(true);
+      setAreOptionsDisabled(false); 
     }
   };
 
@@ -22,14 +21,14 @@ const RestartButton = ({ startGame, resumeTimer, stopTimer, playSound }) => {
     playSound(stopSound); // Play the stop sound
     stopTimer();
     setIsStartDisabled(false);
+    setAreOptionsDisabled(true);
   };
 
   const handleRestartClick = () => {
     if (!isStartDisabled) {
       if (isGameStarted) {
-        startGame(); // Call startGame only if the game hasn't started before
-        setIsGameStarted(true); // Set the game as started
-        resumeTimer();
+        handleGameOver(); // Call startGame only if the game hasn't started before
+        stopTimer();
       }
      // playSound(startSound); // Play the start sound
       setIsStartDisabled(false);
@@ -49,7 +48,7 @@ const RestartButton = ({ startGame, resumeTimer, stopTimer, playSound }) => {
         className="btn btn-primary"
         onClick={handleRestartClick}
       >
-        RESTART
+        FINISH
       </button>
     </div>
   );
