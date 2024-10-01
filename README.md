@@ -1,5 +1,5 @@
 Deployment link:
 
 
-https://myrepo-gilt-sigma.vercel.app/
+https://myrepo-sandy-theta.vercel.app/
 
